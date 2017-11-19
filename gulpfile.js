@@ -47,10 +47,15 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('dist/css'));
 });
 
+gulp.task('fonts', function () {
+    return gulp.src(['node_modules/materialize-css/dist/fonts/**/*'])
+    .pipe(gulp.dest('dist/fonts'));
+});
+
 gulp.task('clean', function() {
-    return del(['dist/css', 'dist/js', 'dist/img']);
+    return del(['dist/css', 'dist/js', 'dist/img', 'dist/fonts']);
 });
 
 gulp.task('default', ['clean'], function() {
-    gulp.start('styles', 'scripts', 'images');
+    gulp.start('styles', 'scripts', 'images', 'fonts');
 });
