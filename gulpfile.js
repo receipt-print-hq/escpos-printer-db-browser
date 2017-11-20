@@ -28,7 +28,7 @@ gulp.task('scripts', function() {
       'node_modules/materialize-css/dist/js/materialize.min.js',
       'node_modules/underscore/underscore-min.js',
       'node_modules/backbone/backbone-min.js',
-      'src/scripts/*.js'
+      //'src/scripts/*.js'
     ])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
