@@ -43,81 +43,92 @@
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
   </nav>
-  <div class="section no-pad-bot" id="index-banner">
+  <div id="page-default">
+    <!-- Appears during loading -->
+  </div>
+  <div id="page-overview" class="hide">
+    <div class="section no-pad-bot" id="index-banner">
+      <div class="container">
+        <br><br>
+        <h1 class="header center blue-text">POS Printer Database</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">This is a community-maintained database of POS printer capabilities, for producing interoperable software.</h5>
+        </div>
+        <div class="row center">
+          <a href="#profiles" id="download-button" class="btn-large waves-effect waves-light blue">Browse Printers</a>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+
     <div class="container">
-      <br><br>
-      <h1 class="header center blue-text">POS Printer Database</h1>
-      <div class="row center">
-        <h5 class="header col s12 light">This is a community-maintained database of POS printer capabilities, for producing interoperable software.</h5>
-      </div>
-      <div class="row center">
-        <a href="#profiles" id="download-button" class="btn-large waves-effect waves-light blue">Browse Printers</a>
-      </div>
-      <br><br>
+      <div class="section">
+        <!--   Icon Section   -->
+        <div class="row">
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="material-icons">language</i></h2>
+              <h5 class="center">Localised</h5>
 
+              <p class="light">POS printers use legacy code pages, but data is usually found in a modern encoding like UTF-8.</p>
+              <p class="light">This database allows developers to handle this conversion gracefully, to get printers speaking your language.</p>
+              <p class="center">
+                <a class="btn waves-effect waves-light blue" href="#encodings">Browse encodings</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="material-icons">code</i></h2>
+              <h5 class="center">Open source</h5>
+              <p class="light">This data was by the open source POS community, to help improve their own printing experience.</p>
+              <p class="light">By contributing to this database, you can improve software compatibility for the printers that you use.</p>
+              <p class="center">
+                <a class="btn waves-effect waves-light blue" href="https://github.com/receipt-print-hq/escpos-printer-db">Get involved</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="col s12 m4">
+            <div class="icon-block">
+              <h2 class="center blue-text"><i class="material-icons">business</i></h2>
+              <h5 class="center">Vendor independent</h5>
+
+              <p class="light">Some printers emulate a limited ESC/POS command set.</p>
+              <p class="light">By using this database, you can develop software that sends the right commands to ESC/POS printers from any vendor.</p>
+
+              <p class="center">
+                <a class="btn waves-effect waves-light blue" href="#vendors">Browse vendors</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br><br>
     </div>
   </div>
 
-  <div class="container">
-    <div class="section">
-      <!--   Icon Section   -->
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">language</i></h2>
-            <h5 class="center">Localised</h5>
+  <div id="page-profiles" class="hide">
+    <div style="border: 1px solid #f00">
+      <table>
+        <tbody id="profile-tbody">
 
-            <p class="light">POS printers use legacy code pages, but data is usually found in a modern encoding like UTF-8.</p>
-            <p class="light">This database allows developers to handle this conversion gracefully, to get printers speaking your language.</p>
-            <p class="center">
-              <a class="btn waves-effect waves-light blue" href="#encodings">Browse encodings</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">code</i></h2>
-            <h5 class="center">Open source</h5>
-            <p class="light">This data was by the open source POS community, to help improve their own printing experience.</p>
-            <p class="light">By contributing to this database, you can improve software compatibility for the printers that you use.</p>
-            <p class="center">
-              <a class="btn waves-effect waves-light blue" href="https://github.com/receipt-print-hq/escpos-printer-db">Get involved</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center blue-text"><i class="material-icons">business</i></h2>
-            <h5 class="center">Vendor independent</h5>
-
-            <p class="light">Some printers emulate a limited ESC/POS command set.</p>
-            <p class="light">By using this database, you can develop software that sends the right commands to ESC/POS printers from any vendor.</p>
-
-            <p class="center">
-              <a class="btn waves-effect waves-light blue" href="#vendors">Browse vendors</a>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div style="border: 1px solid #f00">
-        <table>
-          <tbody id="profile-tbody">
-
-          </tbody>
-        </table>
-
-        <div id="profileTemplateDetail">
-
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
-    <br><br>
   </div>
 
-  <footer class="page-footer blue">
+ <div id="page-profile" class="hide">
+    <div style="border: 1px solid #0f0">
+      <div id="profileTemplateDetail">
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer blue hide" id="page-footer">
     <div class="container">
       <div class="row">
         <div class="col l6 s12">
@@ -152,7 +163,6 @@
   </footer>
 
   <script type="text/javascript" src="dist/js/main.min.js"></script>
-  <script type="text/javascript" src="src/scripts/main.js"></script>
 </body>
 
 </html>
