@@ -3,6 +3,9 @@ sudo: false
 
 language: node_js
 
+node_js:
+  - 6
+
 script:
   - ./node_modules/.bin/gulp
   - python3 ./tools/import_database.py
