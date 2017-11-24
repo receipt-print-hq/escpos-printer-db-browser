@@ -3,6 +3,11 @@ sudo: false
 
 language: node_js
 
+addons:
+  apt:
+    packages:
+      - python-requests
+
 node_js:
   - 6
 
