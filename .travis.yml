@@ -6,7 +6,7 @@ language: node_js
 addons:
   apt:
     packages:
-      - python-requests
+      - python3-requests
 
 node_js:
   - 6
