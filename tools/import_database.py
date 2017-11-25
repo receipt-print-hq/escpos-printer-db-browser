@@ -40,9 +40,31 @@ def produce_encoding(encoding_id, db_data, profile_keys):
         } for x in profile_keys if encoding_id in db_data['profiles'][x]['codePages'].values()]
     return enc
 
+def dict_to_list(inp_obj):
+    """
+    Take dictionary and return list of key value pairs.
+    """
+    # Test for dict with numeric keys
+    unsorted_keys = inp_obj.keys()
+    non_numeric_keys = [x for x in unsorted_keys if not x.isdigit()]
+    if len(unsorted_keys) == 0:
+        return []
+    elif len(non_numeric_keys) == 0:
+        # Numeric keys, sort numeric and write numeric
+        obj_keys = sorted(unsorted_keys, key=lambda s: int(s))
+        return [{'key': int(k), 'val': inp_obj[k]} for k in obj_keys]
+    else:
+        # Text keys, sort case insensitive
+        obj_keys = sorted(unsorted_keys, key=lambda s: s.lower())
+        return [{'key': k, 'val': inp_obj[k]} for k in obj_keys]
+
 def produce_profile(profile_id, db_data):
     prof = db_data['profiles'][profile_id]
     prof['id'] = profile_id
+    prof['features'] = dict_to_list(prof['features'])
+    prof['codePages'] = dict_to_list(prof['codePages'])
+    prof['fonts'] = dict_to_list(prof['fonts'])
+    prof['colors'] = dict_to_list(prof['colors'])
     return prof
 
 def process_db():

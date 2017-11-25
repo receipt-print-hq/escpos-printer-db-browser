@@ -8,24 +8,157 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link type="text/css" rel="stylesheet" href="dist/css/main.min.css" media="screen,projection" />
 
-  <script type="text/template" id="profile-template-row-tr">
-  	<tr>
-  		<td><a href="#profiles/<%= _.escape(id) %>"><%= _.escape(name) %></a></td>
-  	</tr>
+  <script type="text/template" id="encoding-template-row">
+    <a class="collection-item blue-text" href="#encodings/<%= _.escape(id) %>"><%= _.escape(name) %></a>
+  </script>
+
+  <script type="text/template" id="encoding-template-detail">
+    <h3>Encoding: <%= _.escape(name) %></h3>
+
+    <h4>Basic details</h4>
+
+    <table class="bordered">
+      <tr>
+        <th>Name</th>
+        <td><%= _.escape(name) %></td>
+      </tr>
+      <tr>
+        <th>Internal ID</th>
+        <td><%= _.escape(id) %></td>
+      </tr>
+      <tr>
+        <th>Python encode ID</th>
+        <td><%= _.escape(python_encode) %></td>
+      </tr>
+      <tr>
+        <th>Iconv ID</th>
+        <td><%= _.escape(iconv) %></td>
+      </tr>
+    </table>
+
+    <% if(data !== null) { %>
+    <h4>Data</h4>
+    <pre><% _.each(data, function(line) { %><%= _.escape(line) %><br /><% }); %></pre>
+    <% } %>
+
+    <h4>Referenced in profiles</h4>
+
+    <div class="collection">
+      <% _.each(profiles, function(profile) { %>
+        <a class="collection-item blue-text" href="#profiles/<%= _.escape(profile.id) %>"><%= _.escape(profile.name) %></a>
+      <% }); %>
+    </div>
+  </script>
+
+  <script type="text/template" id="profile-template-row">
+  	<a class="collection-item blue-text" href="#profiles/<%= _.escape(id) %>"><%= _.escape(name) %></a>
   </script>
 
   <script type="text/template" id="profile-template-detail">
-    <table>
+    <h3><%= _.escape(name) %></h3>
+
+    <%= _.escape(notes) %>
+
+    <h4>Basic information</h4>
+
+    <table class="bordered">
       <tr>
-        <td>
-          <%= _.escape(name) %>
-        </td>
+        <th>Name</th>
+        <td><%= _.escape(name) %></td>
       </tr>
       <tr>
+        <th>Vendor</th>
+        <td><a href="#vendors/<%= _.escape(vendor_name_to_id(vendor)) %>"><%= _.escape(vendor) %></a></td>
+      </tr>
+      <tr>
+        <th>Media width (mm)</th>
+        <td><%= _.escape(media.width.mm) %></td>
+      </tr>
+      <tr>
+        <th>Media width (pixels)</th>
+        <td><%= _.escape(media.width.pixels) %></td>
+      </tr>
+    </table>
+
+    <h4>Fonts</h4>
+
+    <table class="bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Columns</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% _.each(fonts, function(font) { %>
+        <tr>
+          <td><%= _.escape(font.key) %></td>
+          <td><%= _.escape(font.val.name) %></td>
+          <td><%= _.escape(font.val.columns) %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <h4>Colors</h4>
+    <table class="bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% _.each(colors, function(color) { %>
+        <tr>
+          <td><%= _.escape(color.key) %></td>
+          <td><%= _.escape(color.val) %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+
+    <h4>Feature support</h4>
+
+    <table class="bordered">
+      <% _.each(features, function(feature) { %>
+      <tr>
+        <th><%= _.escape(feature.key) %></th>
         <td>
-          <%= _.escape(notes) %>
+          <% if (feature.val) { %>
+          <i class="material-icons green-text text-darken-1">check</i>
+          <% } else { %>
+          <i class="material-icons red-text text-darken-1">clear</i>
+          <% } %>
         </td>
       </tr>
+      <% }); %>
+    </table>
+
+    <h4>Text code pages</h4>
+
+    <table class="bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Encoding</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% _.each(codePages, function(codePage) { %>
+        <tr>
+          <td><%= _.escape(codePage.key) %></td>
+          <td>
+            <% if (codePage.val !== 'Unknown') { %>
+              <a class="collection-item blue-text" href="#encodings/<%= _.escape(codePage.val) %>"><%= _.escape(codePage.val) %></a>
+            <% } else { %>
+              Unknown
+            <% } %>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
     </table>
   </script>
 </head>
@@ -110,34 +243,31 @@
     </div>
   </div>
 
-  <div id="page-profiles" class="hide">
-    <table>
-      <tbody id="profile-tbody">
-
-      </tbody>
-    </table>
+  <div id="page-profiles" class="container hide">
+    <h3>Printer profile list</h3>
+    <div class="collection" id="profile-list"></div>
   </div>
 
- <div id="page-profile" class="hide">
-    <div id="profileTemplateDetail">
-
-    </div>
+  <div id="page-profile" class="container hide">
+    <div id="profileTemplateDetail"></div>
   </div>
 
-  <div id="page-vendors" class="hide">
-     Vendor list
+  <div id="page-vendors" class="container hide">
+    <h3>Printer vendor list</h3>
+    <div class="collection" id="vendor-list"></div>
   </div>
 
-  <div id="page-vendor" class="hide">
+  <div id="page-vendor" class="container hide">
      Vendor
   </div>
 
-  <div id="page-encodings" class="hide">
-     Encoding list
+  <div id="page-encodings" class="container hide">
+    <h3>Text encoding list</h3>
+    <div class="collection" id="encoding-list"></div>
   </div>
 
-  <div id="page-encoding" class="hide">
-     Encoding
+  <div id="page-encoding" class="container hide">
+     <div id="encodingTemplateDetail"></div>
   </div>
 
   <footer class="page-footer blue hide" id="page-footer">

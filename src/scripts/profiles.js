@@ -6,9 +6,9 @@ var profile_model = Backbone.Model.extend({
   },
 
   defaults: {
-    codePages: {},
+    codePages: [],
     colors: {},
-    features: {},
+    features: [],
     fonts: {},
     media: {},
     name: '',
@@ -37,7 +37,7 @@ var ProfileDetailView = Backbone.View.extend({
 });
 
 var ProfileRowView = Backbone.View.extend({
-	template : _.template($('#profile-template-row-tr').html()),
+	template : _.template($('#profile-template-row').html()),
 	tagName : 'tr',
 
 	initialize : function(options) {
@@ -50,9 +50,9 @@ var ProfileRowView = Backbone.View.extend({
 	}
 });
 
-var ProfileTableView = Backbone.View.extend({
+var ProfileListView = Backbone.View.extend({
   collection: null,
-  el: 'tbody#profile-tbody',
+  el: 'div#profile-list',
 
   initialize: function(options) {
     this.collection = options.collection;
@@ -74,7 +74,6 @@ var ProfileTableView = Backbone.View.extend({
 
 function showProfileDetail(results) {
   tabTo('profile');
-  //$('#profileList').hide();
   var profileView = new ProfileDetailView({
     model: results
   });
@@ -85,7 +84,7 @@ function doLoadProfiles(page) {
 	var profiles = new profile_collection();
 	profiles.fetch({
 		success : function(results) {
-			var db = new ProfileTableView({
+			var db = new ProfileListView({
 				collection : profiles
 			});
 			db.render();

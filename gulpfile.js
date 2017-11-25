@@ -24,7 +24,7 @@ var STYLE_SRC = 'src/styles/*.scss';
 gulp.task('images', function() {
   return gulp.src(IMG_SRC)
     .pipe(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true }))
-    .pipe(gulp.dest('dist/img'));
+    .pipe(gulp.dest('dist/img'))
     .pipe(livereload());
 });
 
@@ -51,7 +51,7 @@ gulp.task('styles', function() {
     .pipe(autoprefixer('last 2 version'))
     .pipe(rename({suffix: '.min'}))
     .pipe(cssnano())
-    .pipe(gulp.dest('dist/css'));
+    .pipe(gulp.dest('dist/css'))
     .pipe(livereload());
 });
 

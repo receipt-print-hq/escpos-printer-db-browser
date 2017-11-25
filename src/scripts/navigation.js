@@ -3,19 +3,22 @@ var currentPage = 'default';
 
 function tabTo(tab) {
   if(tab !== currentPage) {
-	  console.log(currentPage + " to " + tab);
+	  console.log("Navigation: from " + currentPage + " to " + tab);
     $('#page-' + currentPage).addClass('hide');
     $('#page-' + tab).removeClass('hide');
 	  if(currentPage === 'default') {
 	    $('#page-footer').removeClass('hide');
 	  }
     currentPage = tab;
+    window.scrollTo(0,0);
 	}
 }
 
 var AppRouter = Backbone.Router.extend({
 	routes : {
+		"encodings/:id" : "loadEncoding",
 		"profiles/:id" : "loadProfile",
+		"vendors/:id" : "loadVendor",
 		"*actions" : "defaultRoute"
 	}
 });
@@ -36,6 +39,20 @@ app_router.on('route:loadProfile', function(id) {
 	});
 });
 
+app_router.on('route:loadEncoding', function(id) {
+	var encoding = new encoding_model({
+		id : id
+	});
+	encoding.fetch({
+		success : function(results) {
+			showEncodingDetail(results);
+		},
+		error : function(model, response) {
+			handleFailedRequest(response);
+		}
+	});
+});
+
 app_router.on('route:defaultRoute', function(actions) {
 	switch (actions) {
 	case 'profiles':
@@ -44,7 +61,7 @@ app_router.on('route:defaultRoute', function(actions) {
 		break;
   case 'encodings':
 	 	tabTo('encodings');
-	 	//doLoadEncodings();
+	 	doLoadEncodings();
    	break;
   case 'vendors':
 	 	tabTo('vendors');
