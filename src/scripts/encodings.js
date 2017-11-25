@@ -9,7 +9,8 @@ var encoding_model = Backbone.Model.extend({
     name: '',
     data: null,
     iconv: null,
-    python_encode: null
+    python_encode: null,
+    profiles: []
   }
 });
 

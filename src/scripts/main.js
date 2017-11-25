@@ -9,6 +9,6 @@
 
 
 function handleFailedRequest(response) {
+  tabTo('failed')
 	console.error("Failed request.");
 }
-

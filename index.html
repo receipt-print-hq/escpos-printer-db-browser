@@ -50,6 +50,16 @@
     </div>
   </script>
 
+  <script type="text/template" id="vendor-template-row">
+    <a class="collection-item blue-text" href="#vendors/<%= _.escape(id) %>"><%= _.escape(name) %></a>
+  </script>
+
+  <script type="text/template" id="vendor-template-detail">
+    <h3>Vendor: <%= _.escape(name) %></h3>
+
+    <p>Vendor printer listing is not yet implemented in database.</p>
+  </script>
+
   <script type="text/template" id="profile-template-row">
   	<a class="collection-item blue-text" href="#profiles/<%= _.escape(id) %>"><%= _.escape(name) %></a>
   </script>
@@ -258,7 +268,7 @@
   </div>
 
   <div id="page-vendor" class="container hide">
-     Vendor
+    <div id="vendorTemplateDetail"></div>
   </div>
 
   <div id="page-encodings" class="container hide">
@@ -268,6 +278,18 @@
 
   <div id="page-encoding" class="container hide">
      <div id="encodingTemplateDetail"></div>
+  </div>
+
+  <div id="page-failed" class="container hide">
+    <br><br>
+    <h1 class="header center">Problem loading page :(</h1>
+    <div class="row center">
+      <h5 class="header col s12 light">There was an error fetching data for the page. Please try again.</h5>
+    </div>
+    <div class="row center">
+      <a href="javascript:location.reload();" id="download-button" class="btn-large waves-effect waves-light blue">Reload page</a>
+    </div>
+    <br><br>
   </div>
 
   <footer class="page-footer blue hide" id="page-footer">

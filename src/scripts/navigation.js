@@ -53,6 +53,20 @@ app_router.on('route:loadEncoding', function(id) {
 	});
 });
 
+app_router.on('route:loadVendor', function(id) {
+	var vendor = new vendor_model({
+		id : id
+	});
+	vendor.fetch({
+		success : function(results) {
+			showVendorDetail(results);
+		},
+		error : function(model, response) {
+			handleFailedRequest(response);
+		}
+	});
+});
+
 app_router.on('route:defaultRoute', function(actions) {
 	switch (actions) {
 	case 'profiles':
@@ -65,7 +79,7 @@ app_router.on('route:defaultRoute', function(actions) {
    	break;
   case 'vendors':
 	 	tabTo('vendors');
-	 	//doLoadVendors();
+	 	doLoadVendors();
    	break;
 	default:
 		tabTo('overview');

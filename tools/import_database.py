@@ -67,6 +67,16 @@ def produce_profile(profile_id, db_data):
     prof['colors'] = dict_to_list(prof['colors'])
     return prof
 
+def produce_vendor(vendor_id, vendor_data, db_data):
+    vendor_name = vendor_data[vendor_id]['name']
+    vendor_profiles = []
+    return {
+        'id': vendor_id,
+        'name': vendor_name,
+        'profiles': vendor_profiles
+    }
+
+
 def process_db():
     """
     Load and process the DB
@@ -87,6 +97,18 @@ def process_db():
     profile_keys = sorted(db_data['profiles'].keys(), key=lambda s: s.lower())
     encoding_keys = sorted(db_data['encodings'].keys(), key=lambda s: s.lower())
 
+    # Extract list of known vendors
+    vendors = {
+        x.replace(' ', '_'): {
+            'name': x
+        }
+        for x in list(set([db_data['profiles'][x]['vendor'] for x in profile_keys]))}
+    vendor_keys = sorted(vendors.keys(), key=lambda s: s.lower())
+
+    #vendor_names = {}
+    #vendor_names = sorted()), key=lambda s: s.lower())
+    #vendor_keys = [x.replace(' ', '_') for x in vendor_names]
+
     # Process encodings
     produce_dir('encodings')
     # Main list
@@ -100,6 +122,12 @@ def process_db():
     write_out(produce_list(db_data['profiles'], profile_keys), 'profiles/index.json')
     for i in profile_keys:
         write_out(produce_profile(i, db_data), 'profiles/' + i + '.json')
+
+    # Process vendors
+    produce_dir('vendors')
+    write_out(produce_list(vendors, vendor_keys), 'vendors/index.json')
+    for i in vendor_keys:
+        write_out(produce_vendor(i, vendors, db_data), 'vendors/' + i + '.json')
 
 if __name__ == '__main__':
     """
