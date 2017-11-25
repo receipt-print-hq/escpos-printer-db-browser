@@ -1,6 +1,6 @@
 /* Navigation */
 var currentPage = 'default';
-  
+
 function tabTo(tab) {
   if(tab !== currentPage) {
 	  console.log(currentPage + " to " + tab);
@@ -42,17 +42,16 @@ app_router.on('route:defaultRoute', function(actions) {
 		tabTo('profiles');
 		doLoadProfiles();
 		break;
-  // case 'encodings':
-	// 	tabTo('encodings');
-	// 	doLoadEncodings();
-  // 	break;
-  // case 'vendors':
-	// 	tabTo('vendors');
-	// 	doLoadVendors();
-  // 	break;
+  case 'encodings':
+	 	tabTo('encodings');
+	 	//doLoadEncodings();
+   	break;
+  case 'vendors':
+	 	tabTo('vendors');
+	 	//doLoadVendors();
+   	break;
 	default:
 		tabTo('overview');
 		break;
 	}
 });
-
