@@ -57,7 +57,11 @@
   <script type="text/template" id="vendor-template-detail">
     <h3>Vendor: <%= _.escape(name) %></h3>
 
-    <p>Vendor printer listing is not yet implemented in database.</p>
+    <div class="collection">
+      <% _.each(profiles, function(profile) { %>
+        <a class="collection-item blue-text" href="#profiles/<%= _.escape(profile.id) %>"><%= _.escape(profile.name) %></a>
+      <% }); %>
+    </div>
   </script>
 
   <script type="text/template" id="profile-template-row">

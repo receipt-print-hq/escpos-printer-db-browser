@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import json
-import collections
 import os
 import requests
 
@@ -32,6 +31,9 @@ def produce_list(data, keys):
         } for k in keys]
 
 def produce_encoding(encoding_id, db_data, profile_keys):
+    """
+    Produce object capturing info we know about an encoding
+    """
     enc = db_data['encodings'][encoding_id]
     enc['id'] = encoding_id
     enc['profiles'] = [
@@ -59,6 +61,9 @@ def dict_to_list(inp_obj):
         return [{'key': k, 'val': inp_obj[k]} for k in obj_keys]
 
 def produce_profile(profile_id, db_data):
+    """
+    Produce object capturing info we know about a printer profile
+    """
     prof = db_data['profiles'][profile_id]
     prof['id'] = profile_id
     prof['features'] = dict_to_list(prof['features'])
@@ -67,15 +72,22 @@ def produce_profile(profile_id, db_data):
     prof['colors'] = dict_to_list(prof['colors'])
     return prof
 
-def produce_vendor(vendor_id, vendor_data, db_data):
+def produce_vendor(vendor_id, vendor_data, profile_keys, db_data):
+    """
+    Produce object capturing info we know about a vendor
+    """
     vendor_name = vendor_data[vendor_id]['name']
-    vendor_profiles = []
+    vendor_profile_keys = sorted([
+        x for x in profile_keys if db_data['profiles'][x]['vendor'] == vendor_name])
+    vendor_profiles = [{
+        'id': x,
+        'name': db_data['profiles'][x]['name'],
+        } for x in vendor_profile_keys]
     return {
         'id': vendor_id,
         'name': vendor_name,
         'profiles': vendor_profiles
     }
-
 
 def process_db():
     """
@@ -105,10 +117,6 @@ def process_db():
         for x in list(set([db_data['profiles'][x]['vendor'] for x in profile_keys]))}
     vendor_keys = sorted(vendors.keys(), key=lambda s: s.lower())
 
-    #vendor_names = {}
-    #vendor_names = sorted()), key=lambda s: s.lower())
-    #vendor_keys = [x.replace(' ', '_') for x in vendor_names]
-
     # Process encodings
     produce_dir('encodings')
     # Main list
@@ -127,10 +135,10 @@ def process_db():
     produce_dir('vendors')
     write_out(produce_list(vendors, vendor_keys), 'vendors/index.json')
     for i in vendor_keys:
-        write_out(produce_vendor(i, vendors, db_data), 'vendors/' + i + '.json')
+        write_out(produce_vendor(i, vendors, profile_keys, db_data), 'vendors/' + i + '.json')
 
 if __name__ == '__main__':
     """
-    Load and process the DB
+    Hand off to function to load and process the DB
     """
     process_db()

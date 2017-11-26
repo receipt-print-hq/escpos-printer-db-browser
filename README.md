@@ -12,3 +12,8 @@ yarn install
 python3 ./tools/import_database.py
 ```
 
+## Hosting
+
+The site is static, so no server-side components are required. Simply upload
+`dist/` and `index.html` to the target server.
+
