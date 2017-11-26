@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/receipt-print-hq/escpos-printer-db-browser.svg?branch=master)](https://travis-ci.org/receipt-print-hq/escpos-printer-db-browser)
 
-This is the source for the online version of the receipt printer database.
+This web app presents the data in [receipt-print-hq/escpos-printer-db
+](https://github.com/receipt-print-hq/escpos-printer-db/) for browsing. It is hosted online [here](https://mike42.me/escpos-printer-db).
 
 ## Build process
 
