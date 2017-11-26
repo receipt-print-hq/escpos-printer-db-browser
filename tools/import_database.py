@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import json
-import collections
 import os
 import requests
 
@@ -32,6 +31,9 @@ def produce_list(data, keys):
         } for k in keys]
 
 def produce_encoding(encoding_id, db_data, profile_keys):
+    """
+    Produce object capturing info we know about an encoding
+    """
     enc = db_data['encodings'][encoding_id]
     enc['id'] = encoding_id
     enc['profiles'] = [
@@ -40,10 +42,52 @@ def produce_encoding(encoding_id, db_data, profile_keys):
         } for x in profile_keys if encoding_id in db_data['profiles'][x]['codePages'].values()]
     return enc
 
+def dict_to_list(inp_obj):
+    """
+    Take dictionary and return list of key value pairs.
+    """
+    # Test for dict with numeric keys
+    unsorted_keys = inp_obj.keys()
+    non_numeric_keys = [x for x in unsorted_keys if not x.isdigit()]
+    if len(unsorted_keys) == 0:
+        return []
+    elif len(non_numeric_keys) == 0:
+        # Numeric keys, sort numeric and write numeric
+        obj_keys = sorted(unsorted_keys, key=lambda s: int(s))
+        return [{'key': int(k), 'val': inp_obj[k]} for k in obj_keys]
+    else:
+        # Text keys, sort case insensitive
+        obj_keys = sorted(unsorted_keys, key=lambda s: s.lower())
+        return [{'key': k, 'val': inp_obj[k]} for k in obj_keys]
+
 def produce_profile(profile_id, db_data):
+    """
+    Produce object capturing info we know about a printer profile
+    """
     prof = db_data['profiles'][profile_id]
     prof['id'] = profile_id
+    prof['features'] = dict_to_list(prof['features'])
+    prof['codePages'] = dict_to_list(prof['codePages'])
+    prof['fonts'] = dict_to_list(prof['fonts'])
+    prof['colors'] = dict_to_list(prof['colors'])
     return prof
+
+def produce_vendor(vendor_id, vendor_data, profile_keys, db_data):
+    """
+    Produce object capturing info we know about a vendor
+    """
+    vendor_name = vendor_data[vendor_id]['name']
+    vendor_profile_keys = sorted([
+        x for x in profile_keys if db_data['profiles'][x]['vendor'] == vendor_name])
+    vendor_profiles = [{
+        'id': x,
+        'name': db_data['profiles'][x]['name'],
+        } for x in vendor_profile_keys]
+    return {
+        'id': vendor_id,
+        'name': vendor_name,
+        'profiles': vendor_profiles
+    }
 
 def process_db():
     """
@@ -65,6 +109,14 @@ def process_db():
     profile_keys = sorted(db_data['profiles'].keys(), key=lambda s: s.lower())
     encoding_keys = sorted(db_data['encodings'].keys(), key=lambda s: s.lower())
 
+    # Extract list of known vendors
+    vendors = {
+        x.replace(' ', '_'): {
+            'name': x
+        }
+        for x in list(set([db_data['profiles'][x]['vendor'] for x in profile_keys]))}
+    vendor_keys = sorted(vendors.keys(), key=lambda s: s.lower())
+
     # Process encodings
     produce_dir('encodings')
     # Main list
@@ -79,8 +131,14 @@ def process_db():
     for i in profile_keys:
         write_out(produce_profile(i, db_data), 'profiles/' + i + '.json')
 
+    # Process vendors
+    produce_dir('vendors')
+    write_out(produce_list(vendors, vendor_keys), 'vendors/index.json')
+    for i in vendor_keys:
+        write_out(produce_vendor(i, vendors, profile_keys, db_data), 'vendors/' + i + '.json')
+
 if __name__ == '__main__':
     """
-    Load and process the DB
+    Hand off to function to load and process the DB
     """
     process_db()

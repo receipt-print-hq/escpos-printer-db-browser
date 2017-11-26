@@ -1,30 +1,24 @@
-/* Printer profiles */
-var profile_model = Backbone.Model.extend({
-  urlRoot: 'dist/data/profiles/',
+/* Printer vendors */
+var vendor_model = Backbone.Model.extend({
+  urlRoot: 'dist/data/vendors/',
   url: function() {
     return Backbone.Model.prototype.url.call(this) + '.json';
   },
 
   defaults: {
-    codePages: [],
-    colors: {},
-    features: [],
-    fonts: {},
-    media: {},
     name: '',
-    notes: '',
-    vendor: ''
+    profiles: []
   }
 });
 
-var profile_collection = Backbone.Collection.extend({
-	url : 'dist/data/profiles/index.json',
-	model : profile_model
+var vendor_collection = Backbone.Collection.extend({
+	url : 'dist/data/vendors/index.json',
+	model : vendor_model
 });
 
-var ProfileDetailView = Backbone.View.extend({
-  template: _.template($('#profile-template-detail').html()),
-  el: 'div#profileTemplateDetail',
+var VendorDetailView = Backbone.View.extend({
+  template: _.template($('#vendor-template-detail').html()),
+  el: 'div#vendorTemplateDetail',
 
   initialize: function(options) {
     _.bindAll(this, 'render');
@@ -36,8 +30,8 @@ var ProfileDetailView = Backbone.View.extend({
   }
 });
 
-var ProfileRowView = Backbone.View.extend({
-	template : _.template($('#profile-template-row').html()),
+var VendorRowView = Backbone.View.extend({
+	template : _.template($('#vendor-template-row').html()),
 	tagName : 'tr',
 
 	initialize : function(options) {
@@ -50,9 +44,9 @@ var ProfileRowView = Backbone.View.extend({
 	}
 });
 
-var ProfileListView = Backbone.View.extend({
+var VendorListView = Backbone.View.extend({
   collection: null,
-  el: 'div#profile-list',
+  el: 'div#vendor-list',
 
   initialize: function(options) {
     this.collection = options.collection;
@@ -63,7 +57,7 @@ var ProfileListView = Backbone.View.extend({
     element.empty();
 
     this.collection.forEach(function(item) {
-      var itemView = new ProfileRowView({
+      var itemView = new VendorRowView({
         model: item
       });
       element.append(itemView.template(itemView.model.toJSON()));
@@ -72,20 +66,20 @@ var ProfileListView = Backbone.View.extend({
   }
 });
 
-function showProfileDetail(results) {
-  tabTo('profile');
-  var profileView = new ProfileDetailView({
+function showVendorDetail(results) {
+  tabTo('vendor');
+  var vendorView = new VendorDetailView({
     model: results
   });
-  profileView.render();
+  vendorView.render();
 }
 
-function doLoadProfiles(page) {
-	var profiles = new profile_collection();
-	profiles.fetch({
+function doLoadVendors(page) {
+	var vendors = new vendor_collection();
+	vendors.fetch({
 		success : function(results) {
-			var db = new ProfileListView({
-				collection : profiles
+			var db = new VendorListView({
+				collection : vendors
 			});
 			db.render();
 		},
@@ -93,4 +87,9 @@ function doLoadProfiles(page) {
 			handleFailedRequest(response);
 		}
 	});
+}
+
+function vendor_name_to_id(name) {
+  // map vendor name to filename to reques
+  return name.replace(' ', '_');
 }
