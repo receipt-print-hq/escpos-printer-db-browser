@@ -2,6 +2,7 @@
 import json
 import os
 import requests
+import subprocess
 
 # Will load from filename if available, otherwise URL will be hit for latest DB
 CAP_URL = "https://raw.githubusercontent.com/receipt-print-hq/escpos-printer-db/master/dist/capabilities.json"
@@ -40,6 +41,21 @@ def produce_encoding(encoding_id, db_data, profile_keys):
         {'id': x,
          'name': db_data['profiles'][x]['name']
         } for x in profile_keys if encoding_id in db_data['profiles'][x]['codePages'].values()]
+    # Convert 'data' to list of characters
+    if 'data' in db_data['encodings'][encoding_id]:
+        enc['data'] = [list(x) for x in db_data['encodings'][encoding_id]['data']]
+    elif 'iconv' in db_data['encodings'][encoding_id]:
+        # Call out to some recycled code to generate the encoding list now
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        encoding = db_data['encodings'][encoding_id]['iconv']
+        script = dir_path + "/generate_iconv.php"
+        # Gets 128-char UTF-8 string showing the upper-half of the code page
+        enc_str = subprocess.check_output([script, encoding]).decode("utf-8")
+        if len(enc_str) == 128:
+            # Chop into list of 16-character strings
+            enc_list = [ enc_str[i:i+16] for i in range(0, 128, 16) ]
+            # Chop into list of 16-item arrays, one entry per char
+            enc['data'] = [list(x) for x in enc_list]
     return enc
 
 def dict_to_list(inp_obj):

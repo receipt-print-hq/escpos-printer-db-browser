@@ -13,6 +13,9 @@
   </script>
 
   <script type="text/template" id="encoding-template-detail">
+    <div class="right">
+      <a href="https://github.com/receipt-print-hq/escpos-printer-db/blob/master/data/encoding.yml" title="Suggest changes to <%= _.escape(name) %> on GitHub"><i class="material-icons blue-text text-darken-1">edit</i></a>
+    </div>
     <h3>Encoding: <%= _.escape(name) %></h3>
 
     <h4>Basic details</h4>
@@ -28,20 +31,44 @@
       </tr>
       <tr>
         <th>Python encode ID</th>
-        <td><%= _.escape(python_encode) %></td>
+        <td><%= _.isEmpty(python_encode) ? '&mdash;' : _.escape(python_encode) %></td>
       </tr>
       <tr>
         <th>Iconv ID</th>
-        <td><%= _.escape(iconv) %></td>
+        <td><%= _.isEmpty(iconv) ? '&mdash;' : _.escape(iconv) %></td>
       </tr>
     </table>
 
     <% if(data !== null) { %>
     <h4>Data</h4>
-    <pre><% _.each(data, function(line) { %><%= _.escape(line) %><br /><% }); %></pre>
+
+    <table class="striped compact">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <% hex_chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']; _.each(hex_chars, function(i) { %>
+          <th><%= _.escape(i) %></th>
+          <% }); %>
+        </tr>
+      </thead>
+      <tbody>
+      <% for (i = 0; i < 8; i++) { %>
+      <tr>
+        <th><%= _.escape(hex_chars[i + 8]) %></th>
+        <% for (j = 0; j < 16; j++) { %>
+        <% if(data[i][j] === ' ') { %>
+        <td>&nbsp;</td>
+        <% } else {%>
+        <td title="<%= _.escape(name) %> 0x<%= _.escape(hex_chars[i + 8]) %><%= _.escape(hex_chars[j]) %>: <%= _.escape(data[i][j]) %>"><%= _.escape(data[i][j]) %></td>
+        <% } %>
+        <% } %>
+      </tr>
+      <% } %>
+      </tbody>
+    </table>
     <% } %>
 
-    <h4>Referenced in profiles</h4>
+    <h4>Used in profiles</h4>
 
     <div class="collection">
       <% _.each(profiles, function(profile) { %>
@@ -65,10 +92,13 @@
   </script>
 
   <script type="text/template" id="profile-template-row">
-  	<a class="collection-item blue-text" href="#profiles/<%= _.escape(id) %>"><%= _.escape(name) %></a>
+    <a class="collection-item blue-text" href="#profiles/<%= _.escape(id) %>"><%= _.escape(name) %></a>
   </script>
 
   <script type="text/template" id="profile-template-detail">
+    <div class="right">
+      <a href="https://github.com/receipt-print-hq/escpos-printer-db/blob/master/data/profile/<%= _.escape(id) %>.yml" title="Suggest changes to <%= _.escape(name) %> on GitHub"><i class="material-icons blue-text text-darken-1">edit</i></a>
+    </div>
     <h3><%= _.escape(name) %></h3>
 
     <%= _.escape(notes) %>
@@ -181,11 +211,14 @@
   <nav class="blue lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><i class="material-icons">folder</i></a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Browse</a></li>
+        <li><a href="#">Home</a></li>
       </ul>
 
       <ul id="nav-mobile" class="side-nav">
-        <li><a href="#">Browse</a></li>
+        <li><a href="#">Home</a></li>
+        <li><a href="#profiles">Printer profiles</a></li>
+        <li><a href="#encodings">Text encodings</a></li>
+        <li><a href="#vendors">Printer vendors</a></li>
       </ul>
       <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
     </div>
@@ -230,7 +263,7 @@
             <div class="icon-block">
               <h2 class="center blue-text"><i class="material-icons">code</i></h2>
               <h5 class="center">Open source</h5>
-              <p class="light">This data was by the open source POS community, to help improve their own printing experience.</p>
+              <p class="light">This data was collected by the open source POS community, to help improve their own printing experience.</p>
               <p class="light">By contributing to this database, you can improve software compatibility for the printers that you use.</p>
               <p class="center">
                 <a class="btn waves-effect waves-light blue" href="https://github.com/receipt-print-hq/escpos-printer-db">Get involved</a>
@@ -258,6 +291,9 @@
   </div>
 
   <div id="page-profiles" class="container hide">
+    <div class="right">
+      <a href="https://github.com/receipt-print-hq/escpos-printer-db/blob/master/doc/add-your-printer.md" title="Add your printer"><i class="material-icons blue-text text-darken-1">add</i></a>
+    </div>
     <h3>Printer profile list</h3>
     <div class="collection" id="profile-list"></div>
   </div>
