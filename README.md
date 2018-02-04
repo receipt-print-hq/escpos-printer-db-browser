@@ -1,4 +1,4 @@
-# escpos-print-db browser
+# escpos-printer-db browser
 
 [![Build Status](https://travis-ci.org/receipt-print-hq/escpos-printer-db-browser.svg?branch=master)](https://travis-ci.org/receipt-print-hq/escpos-printer-db-browser)
 

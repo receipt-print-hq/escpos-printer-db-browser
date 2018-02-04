@@ -53,3 +53,8 @@
 html {
     overflow-y: scroll;
 }
+
+/* Compact table */
+.compact td, .compact th {
+    padding: 5px 5px;
+}
